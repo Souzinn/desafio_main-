@@ -4,12 +4,25 @@ import cardPokemon from "../components/pokemon/cardPokemon.vue";
 import copy from "../components/abstractions/copyText.vue";
 import inputSearch from "../components/ui/input.vue";
 import { useStore } from "vuex";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 
 const store = useStore();
 
+const infiniteScroll = () => {
+  const scrollPosition = window.innerHeight + window.scrollY;
+  const pageHeight = document.documentElement.offsetHeight;
+  if (scrollPosition >= pageHeight - 200) {
+    store.dispatch("loadMore");
+  }
+};
+
 onMounted(() => {
   store.dispatch("loadMore");
+  window.addEventListener("scroll", infiniteScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", infiniteScroll);
 });
 
 const pokemonsList = computed(() => store.state.pokemonsList);
