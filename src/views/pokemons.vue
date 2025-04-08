@@ -3,6 +3,18 @@ import cardemphasisvue from "../components/abstractions/cardEmphasis.vue";
 import cardPokemon from "../components/pokemon/cardPokemon.vue";
 import copy from "../components/abstractions/copyText.vue";
 import inputSearch from "../components/ui/input.vue";
+import { useStore } from "vuex";
+import { computed, onMounted } from "vue";
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch("loadMore");
+});
+
+const pokemonsList = computed(() => store.state.pokemonsList);
+
+console.log(pokemonsList);
 </script>
 
 <template>
@@ -30,7 +42,12 @@ import inputSearch from "../components/ui/input.vue";
       </div>
 
       <div class="d-flex flex-column gap-3 my-4">
-        <cardPokemon class="border rounded p-3 bg-dark-subtle text-white" />
+        <cardPokemon
+          v-for="(pokemon, index) in pokemonsList"
+          :key="index"
+          :pokemon="{ ...pokemon, key: index + 1 }"
+          class="border rounded p-3 bg-dark-subtle text-white"
+        />
       </div>
     </div>
   </div>
