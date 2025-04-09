@@ -26,8 +26,6 @@ onUnmounted(() => {
 });
 
 const pokemonsList = computed(() => store.state.pokemonsList);
-
-console.log(pokemonsList);
 </script>
 
 <template>
@@ -35,7 +33,6 @@ console.log(pokemonsList);
     <div>
       <copy />
     </div>
-
     <div class="container p-4">
       <h5 class="mb-4">Mais votados</h5>
       <div class="d-flex justify-content-between flex-wrap gap-3">
