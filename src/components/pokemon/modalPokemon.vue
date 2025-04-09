@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 
 const props = defineProps({
@@ -19,6 +19,16 @@ const fetchPokemonDetails = async () => {
 
 onMounted(() => {
   fetchPokemonDetails();
+});
+
+const spriteImages = computed(() => {
+  const id = pokemonDetails.value.id;
+  return [
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
+  ];
 });
 </script>
 
@@ -55,6 +65,15 @@ onMounted(() => {
               <ul>
                 <li v-for="(move, index) in pokemonDetails.moves" :key="index">
                   {{ move.move.name }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-3">
+              <span>Sprites:</span>
+              <ul>
+                <li v-for="(spriteUrl, index) in spriteImages" :key="index">
+                  <img :src="spriteUrl" alt="sprite" />
                 </li>
               </ul>
             </div>
