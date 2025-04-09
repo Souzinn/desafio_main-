@@ -1,9 +1,9 @@
-<script>
-export default {
-  props: {
-    pokemon: Object,
-  },
-};
+<script setup>
+import PokemonModal from "./modalPokemon.vue";
+
+defineProps({
+  pokemon: Object,
+});
 </script>
 
 <template>
@@ -23,10 +23,14 @@ export default {
       </div>
     </div>
 
-    <div>
-      <span class="badge bg-primary text-capitalize"></span>
-    </div>
-
-    <a class="btn btn-outline-primary ms-3">more</a>
+    <button
+      class="btn btn-outline-primary ms-3"
+      data-bs-toggle="modal"
+      :data-bs-target="`#modal-${pokemon.key}`"
+    >
+      more
+    </button>
   </div>
+
+  <PokemonModal :pokemon="pokemon.key" />
 </template>
