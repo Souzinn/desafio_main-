@@ -1,8 +1,16 @@
 <script setup>
 import PokemonModal from "./modalPokemon.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
-defineProps({
+const props = defineProps({
   pokemon: Object,
+});
+
+const store = useStore();
+
+const pokemonDetail = computed(() => {
+  return store.state.pokemonDetalis.find((p) => p.name === props.pokemon.name);
 });
 </script>
 
@@ -21,6 +29,16 @@ defineProps({
         <span class="text-muted small">#{{ pokemon.key }}</span>
         <p class="mb-0 fw-semibold text-capitalize">{{ pokemon.name }}</p>
       </div>
+    </div>
+
+    <div v-if="pokemonDetail && pokemonDetail.types">
+      <span
+        v-for="(type, index) in pokemonDetail.types"
+        :key="index"
+        class="badge bg-primary me-1 text-capitalize"
+      >
+        {{ type.type.name }}
+      </span>
     </div>
 
     <button
