@@ -5,6 +5,7 @@ import { useStore } from "vuex";
 
 const props = defineProps({
   pokemon: Object,
+  required: true,
 });
 
 const store = useStore();
@@ -16,6 +17,7 @@ const pokemonDetail = computed(() => {
 
 <template>
   <div
+    v-bind="$attrs"
     class="d-flex align-items-center justify-content-between p-3 border rounded shadow-sm bg-white mb-3"
   >
     <div class="d-flex align-items-center gap-3">
