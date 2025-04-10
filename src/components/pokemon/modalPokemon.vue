@@ -1,17 +1,24 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
+import requestdata from "../../service/index";
 
 const props = defineProps({
   pokemon: Number,
 });
 const store = useStore();
+const service = new requestdata();
+
 const pokemonDetails = ref(null);
+const evolutionChain = ref([]);
 
 const fetchPokemonDetails = async () => {
   try {
     const details = await store.dispatch("MoreDetalis", props.pokemon);
     pokemonDetails.value = details;
+
+    const chain = await service.fetchEvolutionChain(details.id);
+    evolutionChain.value = chain;
   } catch (err) {
     console.error("Erro ao buscar detalhes do Pokémon:", err);
   }
@@ -19,6 +26,17 @@ const fetchPokemonDetails = async () => {
 
 onMounted(() => {
   fetchPokemonDetails();
+});
+
+const spriteImages = computed(() => {
+  const id = pokemonDetails.value?.id;
+  if (!id) return [];
+  return [
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
+  ];
 });
 </script>
 
@@ -47,14 +65,30 @@ onMounted(() => {
           <div class="justify-content-center"></div>
           <div v-if="pokemonDetails">
             <p><span>Nome:</span> {{ pokemonDetails.name }}</p>
-            <p><span>Altura:</span> {{ pokemonDetails.height }}</p>
-            <p><span>Peso:</span> {{ pokemonDetails.weight }}</p>
 
             <div class="mt-3">
               <span>Movimentos:</span>
               <ul>
                 <li v-for="(move, index) in pokemonDetails.moves" :key="index">
                   {{ move.move.name }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-3">
+              <span>Evolução:</span>
+              <ul>
+                <li v-for="(stage, index) in evolutionChain" :key="index">
+                  {{ stage }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-3">
+              <span>Sprites:</span>
+              <ul>
+                <li v-for="(spriteUrl, index) in spriteImages" :key="index">
+                  <img :src="spriteUrl" alt="sprite" />
                 </li>
               </ul>
             </div>
