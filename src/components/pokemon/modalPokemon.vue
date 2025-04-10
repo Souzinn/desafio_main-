@@ -1,17 +1,24 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useStore } from "vuex";
+import requestdata from "../../service/index";
 
 const props = defineProps({
   pokemon: Number,
 });
 const store = useStore();
+const service = new requestdata();
+
 const pokemonDetails = ref(null);
+const evolutionChain = ref([]);
 
 const fetchPokemonDetails = async () => {
   try {
     const details = await store.dispatch("MoreDetalis", props.pokemon);
     pokemonDetails.value = details;
+
+    const chain = await service.fetchEvolutionChain(details.id);
+    evolutionChain.value = chain;
   } catch (err) {
     console.error("Erro ao buscar detalhes do Pokémon:", err);
   }
@@ -22,7 +29,8 @@ onMounted(() => {
 });
 
 const spriteImages = computed(() => {
-  const id = pokemonDetails.value.id;
+  const id = pokemonDetails.value?.id;
+  if (!id) return [];
   return [
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
@@ -57,14 +65,21 @@ const spriteImages = computed(() => {
           <div class="justify-content-center"></div>
           <div v-if="pokemonDetails">
             <p><span>Nome:</span> {{ pokemonDetails.name }}</p>
-            <p><span>Altura:</span> {{ pokemonDetails.height }}</p>
-            <p><span>Peso:</span> {{ pokemonDetails.weight }}</p>
 
             <div class="mt-3">
               <span>Movimentos:</span>
               <ul>
                 <li v-for="(move, index) in pokemonDetails.moves" :key="index">
                   {{ move.move.name }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-3">
+              <span>Evolução:</span>
+              <ul>
+                <li v-for="(stage, index) in evolutionChain" :key="index">
+                  {{ stage }}
                 </li>
               </ul>
             </div>
