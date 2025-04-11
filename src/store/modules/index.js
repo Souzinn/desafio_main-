@@ -11,7 +11,7 @@ const store = createStore({
   },
   mutations: {
     incrementarOffset(state) {
-      state.offset += 30;
+      state.offset += 10;
     },
     addPokemonsList(state, pokemons) {
       state.pokemonsList.push(...pokemons);
