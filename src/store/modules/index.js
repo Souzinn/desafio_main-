@@ -11,32 +11,35 @@ const store = createStore({
   },
   mutations: {
     incrementarOffset(state) {
-      state.offset += 20;
+      state.offset += 30;
     },
     addPokemonsList(state, pokemons) {
       state.pokemonsList.push(...pokemons);
     },
-    addPokemonsListDetalis(state, pokemons) {
-      state.pokemonDetalis.push(pokemons);
+    addPokemonDetails(state, pokemon) {
+      const exists = state.pokemonDetalis.some((p) => p.id === pokemon.id);
+      if (!exists) {
+        state.pokemonDetalis.push(pokemon);
+      }
     },
   },
   actions: {
     async loadMore({ commit, state }) {
       try {
-        const response = await requestData.fetchReposity(state.offset);
-        commit("addPokemonsList", response.results);
+        const pokemons = await requestData.fetchReposity(state.offset);
+        commit("addPokemonsList", pokemons);
         commit("incrementarOffset");
       } catch (err) {
-        console.error("Erro ao carregar mais pokémons:", err);
+        console.error("Erro:", err);
       }
     },
-    async MoreDetalis({ commit }, index) {
+    async MoreDetalis({ commit }, id) {
       try {
-        const response = await requestData.fetchReposityDetalis(index);
-        commit("addPokemonsListDetalis", response);
-        return response;
+        const pokemon = await requestData.fetchReposityDetalis(id);
+        commit("addPokemonDetails", pokemon);
+        return pokemon;
       } catch (err) {
-        console.error("Erro ao carregar mais pokémons:", err);
+        console.error("Erro:", err);
       }
     },
   },
