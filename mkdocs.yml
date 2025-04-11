@@ -1,0 +1,16 @@
+site_name: Pokédex Vue
+theme:
+  name: material
+  language: pt-BR
+
+nav:
+  - Início: docs/index.md
+  - Instalação: docs/instalacao.md
+  - Contribuindo: docs/contribuindo.md
+  - Estrutura: docs/estrutura.md
+  - Arquitetura:
+      - Componentes: docs/arquitetura/componentes.md
+      - Store Vuex: docs/arquitetura/store.md
+      - Serviços/API: docs/arquitetura/servicos.md
+      - Rotas: docs/arquitetura/router.md
+      - CI/CD: docs/arquitetura/ci.md
