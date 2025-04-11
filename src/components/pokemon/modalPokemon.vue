@@ -6,6 +6,7 @@ import requestdata from "../../service/index";
 const props = defineProps({
   pokemon: Number,
 });
+
 const store = useStore();
 const service = new requestdata();
 
@@ -45,66 +46,68 @@ const spriteImages = computed(() => {
     class="modal fade"
     :id="`modal-${pokemon}`"
     tabindex="-1"
-    :aria-labelledby="`label-${pokemon}`"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" :id="`label-${pokemon}`">
-            Pokémon Detalhes
+            Detalhes do Pokémon
           </h1>
           <button
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
-            aria-label="Close"
+            aria-label="Fechar"
           ></button>
         </div>
-        <div class="modal-body">
-          <div class="justify-content-center"></div>
-          <div v-if="pokemonDetails">
-            <p><span>Nome:</span> {{ pokemonDetails.name }}</p>
 
+        <div class="modal-body">
+          <div v-if="pokemonDetails">
+            <p><strong>Nome:</strong> {{ pokemonDetails.name }}</p>
             <div class="mt-3">
-              <span>Movimentos:</span>
+              <strong>Movimentos:</strong>
               <ul>
                 <li v-for="(move, index) in pokemonDetails.moves" :key="index">
-                  {{ move.move.name }}
+                  {{ move }}
                 </li>
               </ul>
             </div>
-
             <div class="mt-3">
-              <span>Evolução:</span>
+              <strong>Evolução:</strong>
               <ul>
                 <li v-for="(stage, index) in evolutionChain" :key="index">
                   {{ stage }}
                 </li>
               </ul>
             </div>
-
             <div class="mt-3">
-              <span>Sprites:</span>
-              <ul>
-                <li v-for="(spriteUrl, index) in spriteImages" :key="index">
-                  <img :src="spriteUrl" alt="sprite" />
-                </li>
-              </ul>
+              <strong>Sprites:</strong>
+              <div class="d-flex flex-wrap gap-2">
+                <img
+                  v-for="(spriteUrl, index) in spriteImages"
+                  :key="index"
+                  :src="spriteUrl"
+                  alt="sprite"
+                  class="img-thumbnail"
+                  style="width: 72px; height: 72px"
+                />
+              </div>
             </div>
-
             <div class="mt-3">
-              <span>Games:</span>
+              <strong>Games:</strong>
               <ul>
                 <li
-                  v-for="(game, index) in pokemonDetails.game_indices"
+                  v-for="(game, index) in pokemonDetails.games || []"
                   :key="index"
                 >
-                  {{ game.version.name }}
+                  {{ game }}
                 </li>
               </ul>
             </div>
           </div>
+
+          <div v-else class="text-center text-muted">Carregando dados...</div>
         </div>
       </div>
     </div>
