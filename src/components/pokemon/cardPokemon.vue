@@ -55,7 +55,7 @@ const pokemonDetail = computed(() => {
         data-bs-toggle="modal"
         :data-bs-target="`#modal-${pokemon.id}`"
       >
-        more
+        detalhes
       </button>
     </div>
   </div>
