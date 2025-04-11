@@ -5,14 +5,14 @@ class requestdata {
   async fetchReposity(page) {
     try {
       const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon?offset=${page}&limit=30`
+        `https://pokeapi.co/api/v2/pokemon?offset=${page}&limit=10`
       );
       return response.data.results.map((pokemon, index) => ({
         id: page + index + 1,
         name: pokemon.name,
       }));
     } catch (err) {
-      console.error("Erro ao buscar lista de Pokémon:", err);
+      console.error("Erro ao buscar", err);
     }
   }
 
@@ -36,7 +36,7 @@ class requestdata {
         games: data.game_indices.map((game) => game.version.name),
       };
     } catch (err) {
-      console.error("Erro ao buscar detalhes do Pokémon:", err);
+      console.error("Erro ao buscar", err);
     }
   }
 
@@ -52,13 +52,14 @@ class requestdata {
       const chain = [];
       let current = evoRes.data.chain;
       while (current) {
-        chain.push(current.species.name);
+        const speciesId = current.species.url.split("/").slice(-2, -1)[0];
+        chain.push({ name: current.species.name, id: speciesId });
         current = current.evolves_to[0];
       }
 
       return chain;
     } catch (err) {
-      console.error("Erro ao buscar cadeia de evolução:", err);
+      console.error("Erro ao buscar", err);
     }
   }
 }
