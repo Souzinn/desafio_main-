@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Main from "../views/main.vue";
-import Pokemons from "../views/pokemons.vue";
 
 const routes = [
   {
@@ -12,7 +11,7 @@ const routes = [
   {
     path: "/pokemons",
     name: "pokemons",
-    component: Pokemons,
+    component: () => import("../views/pokemons.vue"),
   },
 ];
 

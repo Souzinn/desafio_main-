@@ -2,7 +2,7 @@
   <div class="input-group mb-3">
     <select
       class="form-select"
-      id="inputGroupSelect02"
+      id="inputSelect"
       v-model="selectedOption"
       @change="emitSelection"
     >
@@ -26,7 +26,7 @@
       <option value="steel">Steel</option>
       <option value="fairy">Fairy</option>
     </select>
-    <label class="input-group-text" for="inputGroupSelect02">Tipos</label>
+    <label class="input-group-text" for="inputSelect">Tipos</label>
   </div>
 </template>
 
