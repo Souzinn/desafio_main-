@@ -12,26 +12,39 @@ const service = new requestdata();
 
 const pokemonDetails = ref(null);
 const evolutionChain = ref([]);
+const fetchError = ref(false);
 
 const fetchPokemonDetails = async () => {
   try {
-    const details = await store.dispatch("MoreDetalis", props.pokemon);
-    pokemonDetails.value = details;
+    fetchError.value = false;
+    pokemonDetails.value = null;
+    evolutionChain.value = [];
 
-    const chain = await service.fetchEvolutionChain(details.id);
+    const pokemon = await store.dispatch("MoreDetalis", props.pokemon);
+    if (!pokemon) {
+      fetchError.value = true;
+      return;
+    }
+
+    pokemonDetails.value = pokemon;
+
+    const chain = await service.fetchEvolutionChain(pokemon.id);
     evolutionChain.value = chain.map((evo) => ({
       name: evo.name,
       image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png`,
     }));
   } catch (err) {
-    console.error("Erro ao buscar", err);
+    console.error("Erro ao buscar detalhes do Pokémon:", err);
+    fetchError.value = true;
   }
 };
 
 const clearModalData = () => {
   pokemonDetails.value = null;
   evolutionChain.value = [];
+  fetchError.value = false;
 };
+
 watch(
   () => props.pokemon,
   (newPokemon) => {
@@ -83,7 +96,11 @@ const spriteImages = computed(() => {
         </div>
 
         <div class="modal-body">
-          <div v-if="pokemonDetails">
+          <div v-if="fetchError" class="text-center text-danger">
+            Não foi possível carregar os dados desse Pokémon.
+          </div>
+
+          <div v-else-if="pokemonDetails">
             <p><strong>Nome:</strong> {{ pokemonDetails.name }}</p>
             <div class="mt-3">
               <p class="fw-bold">Movimentos:</p>

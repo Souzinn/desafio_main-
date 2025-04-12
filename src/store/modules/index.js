@@ -11,12 +11,14 @@ const store = createStore({
   },
   mutations: {
     incrementarOffset(state) {
-      state.offset += 10;
+      state.offset += 40;
     },
     addPokemonsList(state, pokemons) {
-      state.pokemonsList.push(...pokemons);
+      const validPokemons = pokemons.filter(p => p && p.id && p.name);
+      state.pokemonsList.push(...validPokemons);
     },
     addPokemonDetails(state, pokemon) {
+      if (!pokemon || !pokemon.id) return;
       const exists = state.pokemonDetalis.some((p) => p.id === pokemon.id);
       if (!exists) {
         state.pokemonDetalis.push(pokemon);
@@ -27,19 +29,28 @@ const store = createStore({
     async loadMore({ commit, state }) {
       try {
         const pokemons = await requestData.fetchReposity(state.offset);
-        commit("addPokemonsList", pokemons);
-        commit("incrementarOffset");
+        if (pokemons && pokemons.length > 0) {
+          commit("addPokemonsList", pokemons);
+          commit("incrementarOffset");
+        } else {
+          console.warn("Nenhum Pokémon retornado para o offset:", state.offset);
+        }
       } catch (err) {
-        console.error("Erro:", err);
+        console.error("Erro ao carregar mais Pokémon:", err);
       }
     },
     async MoreDetalis({ commit }, id) {
       try {
         const pokemon = await requestData.fetchReposityDetalis(id);
-        commit("addPokemonDetails", pokemon);
+        if (pokemon) {
+          commit("addPokemonDetails", pokemon);
+        } else {
+          console.warn(`Detalhes não encontrados para o Pokémon ID ${id}`);
+        }
         return pokemon;
       } catch (err) {
-        console.error("Erro:", err);
+        console.error("Erro ao buscar detalhes do Pokémon:", err);
+        return null;
       }
     },
   },
