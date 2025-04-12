@@ -6,6 +6,14 @@ defineProps(["filteredPokemons"]);
 
 <template>
   <div class="d-flex flex-column gap-3 my-4">
+    <div
+      v-if="filteredPokemons.length === 0"
+      class="alert alert-warning"
+      role="alert"
+    >
+      Nenhum Pokémon encontrado! Verifique o ID ou coloque um valor abaixo de 1025.
+    </div>
+
     <cardPokemon
       v-for="(pokemon, index) in filteredPokemons"
       :key="index"
