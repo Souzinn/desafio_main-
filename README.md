@@ -10,7 +10,7 @@ A aplicação segue uma arquitetura baseada em componentes reutilizáveis, separ
 src/
 ├── assets/               # Imagens e arquivos estáticos
 ├── components/           # Componentes reutilizáveis (List, Filter)
-    ├── components/       # Componentes reutilizáveis (CardPokemon, Modal)
+    ├── pokemons/       # Componentes reutilizáveis (CardPokemon, Modal)
 ├── composables/          # Lógicas reutilizáveis (Filter, InfiniteScroll, Store)
 ├── router/               # Configuração do Vue Router
 ├── services/             # Comunicação com a PokéAPI
